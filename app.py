@@ -5,9 +5,23 @@ from embeddings import retrieve_context
 st.title("ChatGPT-Clone RAG Implementation")
 
 client = Client(api_key=st.secrets["GROQ_API_KEY"])
+models = [
+    "llama-3.1-70b-versatile",
+    "llama-3.2-90b-vision-preview",
+    "llama-3.1-8b-instant",
+    "gemma2-9b-it",
+
+
+
+]
+#create dropdown menu in the sidbar for selecting the model
+selected_model = st.sidebar.selectbox("Selecte a model", models)
 
 if "groq_model" not in st.session_state:
-    st.session_state["groq_model"] = "llama-3.1-70b-versatile"
+    st.session_state["groq_model"] = selected_model
+else:
+    st.session_state["groq_model"] = selected_model
+
 
 #intialize message history
 if "messages" not in st.session_state:
@@ -20,6 +34,8 @@ for message in st.session_state.messages:
 st.markdown("Welcome to my Context Retrieval App")
 st.write("""Please enter your query below. This app specializes in retreiving
 information on codebases.  If your question is code related, our RAG retrevial system to give you the most optimal answer based on the code base https://github.com/CoderAgent/SecureAgent""")
+st.write(f"Current model selected: {st.session_state['groq_model']}")
+
 prompt = st.chat_input("Ask me anything") 
 if prompt:
       # Add user message to session history
